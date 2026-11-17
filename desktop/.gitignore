@@ -1,0 +1,10 @@
+node_modules/
+dist-app/
+dist-shell/
+artifacts/
+*.db
+*.db-wal
+*.db-shm
+.env*
+**/private.pem
+**/*private*key*

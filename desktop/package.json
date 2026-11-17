@@ -1,0 +1,26 @@
+{
+  "name": "health-tracker",
+  "productName": "Health Tracker",
+  "version": "2.0.5",
+  "private": true,
+  "description": "Health Tracker - offline desktop application",
+  "author": "Local user",
+  "main": "dist-shell/shell.js",
+  "scripts": {
+    "prepare:app": "node tools/prepare.mjs",
+    "smoke": "node tools/run-smoke.cjs",
+    "dist": "electron-builder --win nsis --x64 --publish never"
+  },
+  "dependencies": {"better-sqlite3": "13.0.3"},
+  "devDependencies": {"electron": "45.2.3", "electron-builder": "26.18.0", "esbuild": "0.28.2", "jszip": "3.10.2"},
+  "build": {
+    "appId": "com.local.healthtracker",
+    "productName": "Health Tracker",
+    "directories": {"output": "artifacts"},
+    "files": ["dist-app/**", "dist-shell/**", "package.json"],
+    "asarUnpack": ["**/node_modules/better-sqlite3/**"],
+    "win": {"target": [{"target": "nsis", "arch": ["x64"]}], "artifactName": "Health-Tracker-Setup-${version}.${ext}"},
+    "nsis": {"oneClick": false, "perMachine": false, "allowToChangeInstallationDirectory": true, "deleteAppDataOnUninstall": false, "createDesktopShortcut": "always"},
+    "publish": null
+  }
+}
