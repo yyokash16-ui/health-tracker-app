@@ -37,8 +37,10 @@ for (const [name, content] of verified) {
   fs.writeFileSync(target, content);
 }
 fs.writeFileSync('dist-app/manifest.json', manifestBytes);
+fs.cpSync('node_modules/better-sqlite3', 'dist-app/node_modules/better-sqlite3', { recursive: true });
 await build({ entryPoints: ['electron/shell.ts'], outfile: 'dist-shell/shell.js', platform: 'node', target: 'node22', format: 'cjs', bundle: true, external: ['electron'], sourcemap: false });
 fs.mkdirSync('artifacts', { recursive: true });
 fs.writeFileSync('artifacts/HealthTracker-2.0.5-full.htupdate', bytes);
 fs.writeFileSync('artifacts/provenance.json', JSON.stringify({ version: manifest.version, sourceCommit, updateGitBlob: blob, updateSha256: crypto.createHash('sha256').update(bytes).digest('hex'), signatureVerified: true, payloadFilesVerified: verified.length, payloadUnmodified: true, shellProtocol: 1, dataDirectory: '%APPDATA%/Health Tracker', installer: 'NSIS x64', windowsAuthenticodeSigned: false }, null, 2));
 console.log(`Verified signature and ${verified.length} payload files; packaged app remains v2.0.5.`);
+

@@ -11,7 +11,7 @@ const appPath = app.getAppPath();
 const bundledRoot = path.join(appPath, 'dist-app');
 
 // Lets code that lives in an update folder (outside the asar) find the native better-sqlite3 module shipped in the .exe.
-process.env.NODE_PATH = [path.join(appPath, 'node_modules'), process.env.NODE_PATH].filter(Boolean).join(path.delimiter);
+process.env.NODE_PATH = [path.join(appPath, 'node_modules'), path.join(appPath, 'dist-app', 'node_modules'), process.env.NODE_PATH].filter(Boolean).join(path.delimiter);
 (Module as unknown as { _initPaths(): void })._initPaths();
 
 const layout = layoutFor(app.getPath('userData'));
@@ -52,3 +52,4 @@ try {
 } catch (e) {
   app.whenReady().then(() => failStartup(e));
 }
+
