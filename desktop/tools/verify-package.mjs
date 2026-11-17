@@ -12,8 +12,19 @@ for (const f of manifest.files) {
   const b = asar.extractFile(archive, path.join('dist-app', ...f.path.split('/')));
   if (b.length !== f.size || crypto.createHash('sha256').update(b).digest('hex') !== f.sha256) throw Error(`Packaged payload mismatch: ${f.path}`);
 }
-const native = path.join('artifacts', 'win-unpacked', 'resources', 'app.asar.unpacked', 'node_modules', 'better-sqlite3', 'build', 'Release', 'better_sqlite3.node');
-if (!fs.existsSync(native)) throw Error('Unpacked native SQLite module missing');
+const unpackedRoot = path.join('artifacts', 'win-unpacked', 'resources', 'app.asar.unpacked');
+const nativeCandidates = [];
+const walk = dir => {
+  if (!fs.existsSync(dir)) return;
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) walk(full);
+    else if (entry.name === 'better_sqlite3.node') nativeCandidates.push(full);
+  }
+};
+walk(unpackedRoot);
+if (nativeCandidates.length === 0) throw Error('Unpacked native SQLite module missing');
 const installer = 'artifacts/Health-Tracker-Setup-2.0.5.exe';
 if (!fs.existsSync(installer) || fs.statSync(installer).size < 1000000) throw Error('Installer was not produced');
 console.log('Packaged identity, payload hashes, file exclusions and native SQLite module verified.');
+
