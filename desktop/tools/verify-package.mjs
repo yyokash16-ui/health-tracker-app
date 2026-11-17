@@ -12,7 +12,7 @@ for (const f of manifest.files) {
   const b = asar.extractFile(archive, path.join('dist-app', ...f.path.split('/')));
   if (b.length !== f.size || crypto.createHash('sha256').update(b).digest('hex') !== f.sha256) throw Error(`Packaged payload mismatch: ${f.path}`);
 }
-const unpackedRoot = path.join('artifacts', 'win-unpacked', 'resources', 'app.asar.unpacked');
+const unpackedRoot = path.join('artifacts', 'win-unpacked', 'resources');
 const nativeCandidates = [];
 const walk = dir => {
   if (!fs.existsSync(dir)) return;
