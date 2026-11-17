@@ -19,7 +19,7 @@
     "directories": {"output": "artifacts"},
     "files": ["dist-app/**", "dist-shell/**", "package.json"],
     "asarUnpack": ["**/node_modules/better-sqlite3/**"],
-    "win": {"target": [{"target": "nsis", "arch": ["x64"]}], "artifactName": "Health-Tracker-Setup-${version}.${ext}"},
+    "win": {"target": [{"target": "nsis", "arch": ["x64"]}], "icon": "dist-app/renderer/health-tracker-logo.png", "artifactName": "Health-Tracker-Setup-${version}.${ext}"},
     "nsis": {"oneClick": false, "perMachine": false, "allowToChangeInstallationDirectory": true, "deleteAppDataOnUninstall": false, "createDesktopShortcut": "always"},
     "publish": null
   }
