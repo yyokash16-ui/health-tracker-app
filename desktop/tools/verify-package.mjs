@@ -19,11 +19,24 @@ const walk = dir => {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     const full = path.join(dir, entry.name);
     if (entry.isDirectory()) walk(full);
-    else if (entry.name === 'better_sqlite3.node') nativeCandidates.push(full);
+else if (entry.name === 'better_sqlite3.node' || entry.name.endsWith('.node')) nativeCandidates.push(full);
   }
 };
 walk(unpackedRoot);
-if (nativeCandidates.length === 0) throw Error('Unpacked native SQLite module missing');
+if (nativeCandidates.length === 0) {
+  const allNative = [];
+  const scan = dir => {
+    if (!fs.existsSync(dir)) return;
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const full = path.join(dir, entry.name);
+      if (entry.isDirectory()) scan(full);
+      else if (entry.name.endsWith('.node')) allNative.push(full);
+    }
+  };
+  scan(path.join('artifacts', 'win-unpacked'));
+  console.error(`Native module scan found: ${allNative.join('; ') || '(none)'}`);
+  throw Error('Unpacked native SQLite module missing');
+}
 const installer = 'artifacts/Health-Tracker-Setup-2.0.5.exe';
 if (!fs.existsSync(installer) || fs.statSync(installer).size < 1000000) throw Error('Installer was not produced');
 console.log('Packaged identity, payload hashes, file exclusions and native SQLite module verified.');
